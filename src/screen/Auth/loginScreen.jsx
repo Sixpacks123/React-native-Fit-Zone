@@ -17,6 +17,8 @@ function LoginScreen() {
             // Save the authentication token to async storage
             const token = data;
             if (token) {
+                await AsyncStorage.setItem('token', token); // Store the token
+
                 setUserData({ token: token }); // Update userData with the token
 
                 // Navigate to the home screen
@@ -24,9 +26,6 @@ function LoginScreen() {
             } else {
                 alert('Token is null or undefined');
             }
-        },
-        onError: (error) => {
-            alert(error.message);
         },
     });
 

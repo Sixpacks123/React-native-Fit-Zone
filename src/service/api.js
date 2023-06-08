@@ -1,4 +1,5 @@
 import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // TODO :  Remove and add to .env
 const baseURL = 'https://fa50-83-118-208-130.ngrok-free.app';
@@ -15,22 +16,25 @@ api.interceptors.response.use(
     response => response,
     error => {
         if (error.response) {
-            // Si la réponse est reçue avec un code d'erreur
-            throw new Error(error.response.data.message || 'Something went wrong');
+            // Log the specific error message from the response
+            console.error('Response error:', error.response.data.message || 'Something went wrong');
         } else if (error.request) {
-            // Si la requête est faite mais aucune réponse n'est reçue
-            throw new Error('No response received');
+            // Log a message for request-related errors
+            console.error('Request error: No response received');
         } else {
-            // Si une erreur se produit lors de la configuration de la requête
-            throw new Error('Request failed');
+            // Log a message for other configuration errors
+            console.error('Request error: Configuration error');
         }
+
+        // Throw the error to propagate it further if needed
+        throw error;
     }
 );
 
 // Intercepteur pour ajouter le jeton d'authentification aux requêtes
 api.interceptors.request.use(
-    config => {
-        const token = localStorage.getItem('token');
+    async config => {
+        const token = await AsyncStorage.getItem('token');
         if (token) {
             config.headers.Authorization = `Bearer ${token}`;
         }
@@ -40,3 +44,4 @@ api.interceptors.request.use(
         throw new Error(error);
     }
 );
+

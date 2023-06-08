@@ -11,7 +11,7 @@ export const api = axios.create({
     },
 });
 
-// Intercepteur pour gérer les erreurs
+// Interceptor for error
 api.interceptors.response.use(
     response => response,
     error => {
@@ -31,7 +31,7 @@ api.interceptors.response.use(
     }
 );
 
-// Intercepteur pour ajouter le jeton d'authentification aux requêtes
+// Interceptor for add token jwt
 api.interceptors.request.use(
     async config => {
         const token = await AsyncStorage.getItem('token');

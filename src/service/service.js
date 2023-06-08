@@ -1,14 +1,4 @@
-import axios from 'axios';
-
-// TODO :  Remove and add to .env
-const baseURL = 'https://54dc-79-174-199-126.ngrok-free.app';
-
-const api = axios.create({
-    baseURL: baseURL,
-    headers: {
-        'Content-Type': 'application/json',
-    },
-});
+import {api} from "./api";
 
 export function login({ email, password }) {
     const data = { email, password };
@@ -22,7 +12,7 @@ export function login({ email, password }) {
             }
         })
         .catch(error => {
-            throw new Error(error.response?.data?.message || 'Something went wrong');
+            throw new Error(error.message);
         });
 }
 
@@ -33,21 +23,17 @@ export function register(userData) {
             return response.data;
         })
         .catch(error => {
-            throw new Error(error.response?.data?.message || 'Something went wrong');
+            throw new Error(error.message);
         });
 }
 
-export function user(token) {
+export function user() {
     return api
-        .get('/auth/me', {
-            headers: {
-                Authorization: "Bearer " + token,
-            },
-        })
+        .get('/auth/me')
         .then(response => {
             return response.data;
         })
         .catch(error => {
-            throw new Error(error.response?.data?.message || 'Error');
+            throw new Error(error.message);
         });
 }

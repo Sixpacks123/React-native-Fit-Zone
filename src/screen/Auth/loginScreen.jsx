@@ -1,12 +1,11 @@
-import * as React from 'react';
+import React, { useContext } from 'react';
 import { View, TextInput, StyleSheet, Text, KeyboardAvoidingView } from 'react-native';
 import { useMutation } from '@tanstack/react-query';
-import { login,user } from '../../service/service';
+import { login, user } from '../../service/service';
 import Button from '../../components/Button';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {CommonActions, useNavigation} from "@react-navigation/native";
-import userContext, {UserContext} from "../../contexts/UserContext";
-import {useContext} from "react";
+import { CommonActions, useNavigation } from "@react-navigation/native";
+import userContext, { UserContext } from "../../contexts/UserContext";
 
 function LoginScreen() {
     const [email, setEmail] = React.useState('');
@@ -42,14 +41,14 @@ function LoginScreen() {
     };
 
     const handlePress = () => {
-        mutation.mutate({
-            email,
-            password,
-        });
+        mutation.mutate({ email, password });
     };
+
     const handleRegister = () => {
         navigation.navigate('Register');
     };
+
+    const { isLoading, isError, error } = mutation;
 
     return (
         <KeyboardAvoidingView
@@ -58,9 +57,9 @@ function LoginScreen() {
         >
             <View style={styles.inner}>
                 <Text style={styles.title}>FitZone</Text>
-                {mutation.isError && (
+                {isError && (
                     <Text style={styles.errorText}>
-                        An error occurred: {mutation.error.message}
+                        An error occurred: {error.message}
                     </Text>
                 )}
                 <TextInput
@@ -83,7 +82,7 @@ function LoginScreen() {
                         title='Connexion'
                         onPress={handlePress}
                         disabled={!email || !password}
-                        loading={mutation.isLoading}
+                        loading={isLoading}
                     />
                     <Text style={styles.registerText}>
                         Vous n'avez pas de compte ?{' '}
@@ -127,7 +126,6 @@ const styles = StyleSheet.create({
     },
     buttons: {
         width: '80%',
-
         flexDirection: 'column',
     },
     registerText: {
@@ -138,7 +136,6 @@ const styles = StyleSheet.create({
     registerLink: {
         color: 'blue',
         textDecorationLine: 'underline',
-
     },
 });
 
